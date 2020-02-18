@@ -1,6 +1,5 @@
 package life.majiang.community.controller;
 
-import com.sun.net.httpserver.HttpServer;
 import life.majiang.community.dto.AccessTokenDTO;
 import life.majiang.community.dto.GithubUser;
 import life.majiang.community.provider.GithubProvider;
