@@ -40,28 +40,34 @@ public class AuthorizeController {
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response) throws IOException {
-        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-        accessTokenDTO.setCode(code);
-        accessTokenDTO.setState(state);
-        accessTokenDTO.setRedirect_uri(redirectUri);
-        accessTokenDTO.setClient_id(clientId);
-        accessTokenDTO.setClient_secret(clientSecret);
-        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser githubUser = githubProvider.getUser(accessToken);
-        if(githubUser != null){
-            User user = new User();
-            String token = UUID.randomUUID().toString();
-            user.setToken(token);
-            user.setName(githubUser.getName());
-            user.setAccountId(String.valueOf((githubUser.getId())));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
-            userMapper.insert(user);
-            response.addCookie(new Cookie("token",token));
-            //登录成功  写入cookie和session
-            //request.getSession().setAttribute("user",githubUser);
-        }else{
-            //登录失败
+        try{
+            AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
+            accessTokenDTO.setCode(code);
+            accessTokenDTO.setState(state);
+            accessTokenDTO.setRedirect_uri(redirectUri);
+            accessTokenDTO.setClient_id(clientId);
+            accessTokenDTO.setClient_secret(clientSecret);
+            String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+            GithubUser githubUser = githubProvider.getUser(accessToken);
+            if(githubUser != null){
+                User user = new User();
+                String token = UUID.randomUUID().toString();
+                user.setToken(token);
+                user.setName(githubUser.getName());
+                user.setAccountId(String.valueOf((githubUser.getId())));
+                user.setGmtCreate(System.currentTimeMillis());
+                user.setGmtModified(user.getGmtCreate());
+
+                userMapper.insert(user);
+                response.addCookie(new Cookie("token",token));
+                //登录成功  写入cookie和session
+                //request.getSession().setAttribute("user",githubUser);
+            }else{
+                //登录失败
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return "redirect:/";
     }
