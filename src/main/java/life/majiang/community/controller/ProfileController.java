@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -28,21 +26,12 @@ public class ProfileController {
                           @RequestParam(name = "page",defaultValue = "1") Integer page,
                           @RequestParam (name = "size",defaultValue = "5") Integer size,
                           Model model){
-        User user = new User();
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null && cookies.length != 0){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if(user != null)
-                    {
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
+
+        User user = (User) request.getSession().getAttribute("user");
+        if(user == null){
+            return "redirect:/";
         }
+
         if("questions".equals(action)){
             model.addAttribute("section",action);
             model.addAttribute("sectionName","我的提问");
@@ -51,9 +40,7 @@ public class ProfileController {
             model.addAttribute("section",action);
             model.addAttribute("sectionName","最新回复");
         }
-        if(user == null){
-            return "redirect:/";
-        }
+
         PaginationDTO paginationDto = questionService.List(user.getId(), page, size);
         model.addAttribute("pagination",paginationDto);
         return "profile";
