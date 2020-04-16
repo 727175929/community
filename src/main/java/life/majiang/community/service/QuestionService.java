@@ -5,6 +5,7 @@ import life.majiang.community.dto.QuestionDTO;
 import life.majiang.community.exception.CustiomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.exception.ICustomizeErrorCode;
+import life.majiang.community.mapper.QuestionExtMapper;
 import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Question;
@@ -23,6 +24,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -153,5 +157,12 @@ public class QuestionService {
             }
             //questionMapper.updateByExampleSelective(updateQuestion, example);
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
