@@ -4,7 +4,6 @@ import life.majiang.community.dto.PaginationDTO;
 import life.majiang.community.dto.QuestionDTO;
 import life.majiang.community.exception.CustiomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
-import life.majiang.community.exception.ICustomizeErrorCode;
 import life.majiang.community.mapper.QuestionExtMapper;
 import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
@@ -76,7 +75,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO List(Integer id, Integer page, Integer size) {
+    public PaginationDTO List(Long id, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalPage;
@@ -124,7 +123,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
             throw new CustomizeException(CustiomizeErrorCode.QUESTION_NOT_FOUND);
@@ -140,6 +139,9 @@ public class QuestionService {
         if(question.getId() == null){
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.insert(question);
         }else {
             question.setGmtModified(question.getGmtCreate());
@@ -159,7 +161,7 @@ public class QuestionService {
         }
     }
 
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question = new Question();
         question.setId(id);
         question.setViewCount(1);

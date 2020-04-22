@@ -30,7 +30,19 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-<!--        <table tableName="user" domainObjectName="User" ></table>-->
-<!--        <table tableName="question" domainObjectName="Question" ></table>-->
+<!--        <table tableName="user" domainObjectName="User"-->
+<!--               enableCountByExample="true" enableUpdateByExample="true"-->
+<!--               enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"-->
+<!--        >-->
+<!--        </table>-->
+        <table tableName="user_table" domainObjectName="User"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"
+        >
+        </table>
+      <!--  <table tableName="question" domainObjectName="Question" ></table>
+        <table tableName="comment" domainObjectName="Comment" ></table>-->
     </context>
 </generatorConfiguration>
